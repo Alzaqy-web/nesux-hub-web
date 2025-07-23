@@ -21,7 +21,7 @@ const Navbar = () => {
     <div className="bg-gray-300 dark:bg-transparent">
       <nav className="container mx-auto flex items-center justify-between p-4">
         <Link href="/">
-          <p className="text-2xl font-bold">BlogHub</p>
+          <p className="text-2xl font-bold">NaxusHub</p>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -33,7 +33,10 @@ const Navbar = () => {
             </>
           ) : (
             <>
-            <Link href="/profile">Profile</Link>
+              <Link href="/profile">Profile</Link>
+              <Link href="/create">Create</Link>
+              <Link href="/dashboard">Dashboard</Link>
+
               <p className="font-bold capitalize">{session.data.user.name}</p>
               <Button variant="destructive" onClick={logout}>
                 Logout
@@ -48,3 +51,8 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// container mx-auto px-4 default
+// condition ? true : false
+
+// if (condition)

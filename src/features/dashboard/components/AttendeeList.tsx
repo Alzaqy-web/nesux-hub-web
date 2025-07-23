@@ -1,12 +1,18 @@
 // src/features/dashboard/components/AttendeeList.tsx
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const dummyAttendees = [
   { name: "Andi", event: "Tech Expo", tickets: 2, totalPaid: "Rp 200.000" },
   { name: "Siti", event: "Game Con", tickets: 1, totalPaid: "Rp 100.000" },
   { name: "Rian", event: "Startup Day", tickets: 3, totalPaid: "Rp 300.000" },
-]
-
+];
 const AttendeeList = () => {
   return (
     <Table>
@@ -29,7 +35,7 @@ const AttendeeList = () => {
         ))}
       </TableBody>
     </Table>
-  )
-}
+  );
+};
 
-export default AttendeeList
+export default AttendeeList;

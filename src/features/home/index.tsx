@@ -1,8 +1,13 @@
+import EventList from "./components/EventList";
+import Jumbotron from "./components/Jumbotron";
 
 const HomePage = () => {
   return (
-    <div className="container flex justify-center mt-10 font-black text-5xl">Ini HomePage</div>
-  )
-}
+    <main className="container mx-auto p-4">
+      <Jumbotron />
+      <EventList />
+    </main>
+  );
+};
 
-export default HomePage
+export default HomePage;
