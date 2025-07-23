@@ -1,3 +1,5 @@
+import { Event } from "./event";
+
 export interface Ticket {
   id: number;
   name: string;
@@ -5,4 +7,5 @@ export interface Ticket {
   type: string;
   price: number;
   availableSeats: number;
+  evntId: Event["id"];
 }

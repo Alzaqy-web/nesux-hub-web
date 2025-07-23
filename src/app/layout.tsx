@@ -2,19 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-<<<<<<< HEAD
 import Footer from "@/components/footer";
 import ReactQueryProvider from "@/provaders/ReactQueryProvaider";
 import { Toaster } from "@/components/ui/sonner";
 import NextAuthProvider from "@/provaders/NextAuthProvider";
 import { ThemeProvider } from "@/provaders/themeProvaider";
 import NuqsProvider from "@/provaders/NuqsProvider";
-=======
-import ReactQueryProvider from "@/providers/ReactQueryProvider";
-import { Toaster } from "@/components/ui/sonner";
-import NextAuthProvider from "@/providers/NextAuthProvider";
-import { ThemeProvider } from "@/providers/ThemeProvider";
->>>>>>> d432ed801b9f9f2987a7d1538533adc5ee83b133
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

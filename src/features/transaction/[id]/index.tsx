@@ -1,11 +1,12 @@
-import React from "react";
-// import TransactionForm from "./components/TransactionForm";
+// import TransactionDetail from "./componets/TransactionDetail";
+
+import TransactionDetail from "./componets/TransactionPayment";
 
 const TransactionPage = () => {
   return (
     <div>
-      formGTGransaksi
-      {/* <TransactionForm eventId={1} eventName="Event A" /> */}
+      {/* <TransactionDetail /> */}
+      <TransactionDetail />
     </div>
   );
 };

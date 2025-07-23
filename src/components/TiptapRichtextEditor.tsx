@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/Utils";
+import { cn } from "@/lib/utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { FC } from "react";

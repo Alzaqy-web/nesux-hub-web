@@ -1,6 +1,5 @@
-import { User } from "./user";
 import { Ticket } from "./ticket";
-import { Tracing } from "trace_events";
+import { User } from "./user";
 
 export interface Event {
   id: number;

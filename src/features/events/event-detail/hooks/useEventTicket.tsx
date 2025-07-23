@@ -1,89 +1,105 @@
-// src/app/events/[slug]/hooks/useEventTicket.ts
-import { useState, useEffect } from "react";
-import { Event, Ticket } from "@/types/event";
+// src/app/events/[eventId]/hooks/useEventTicket.ts
+"use client";
 
-interface UseEventTicketResult {
-  selectedTickets: { [key: number]: number };
-  totalPrice: number;
-  isAnyTicketSelected: boolean;
-  handleTicketQuantityChange: (ticketId: number, quantity: number) => void;
-  handleCheckout: () => void;
+import { useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Event } from "@/types/event"; // Pastikan path ini benar!
+import useCreateTransaction from "@/features/transaction/[id]/api/useCreateTransaction"; // Import hook transaksi
+
+interface SelectedTicketsState {
+  [ticketId: number]: number; // Key: ticketId, Value: quantity
 }
 
-const useEventTicket = (event: Event): UseEventTicketResult => {
-  const [selectedTickets, setSelectedTickets] = useState<{
-    [key: number]: number;
-  }>({});
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [isAnyTicketSelected, setIsAnyTicketSelected] =
-    useState<boolean>(false);
+const useEventTicket = (event: Event) => {
+  const router = useRouter();
+  const [selectedTickets, setSelectedTickets] = useState<SelectedTicketsState>(
+    {},
+  );
 
-  // Inisialisasi selectedTickets saat komponen dimuat atau event berubah
-  useEffect(() => {
-    const initialSelection: { [key: number]: number } = {};
-    event.tickets?.forEach((ticket) => {
-      initialSelection[ticket.id] = 0;
-    });
-    setSelectedTickets(initialSelection);
-    setTotalPrice(0);
-    setIsAnyTicketSelected(false);
-  }, [event.tickets]);
+  const {
+    mutate: createTransaction,
+    isPending: isCreatingTransaction,
+    isSuccess: isTransactionSuccess,
+    isError: isTransactionError,
+  } = useCreateTransaction();
 
-  // Hitung ulang total harga dan status pemilihan tiket
-  useEffect(() => {
-    let calculatedPrice = 0;
-    let anySelected = false;
-    event.tickets?.forEach((ticket) => {
-      const quantity = selectedTickets[ticket.id] || 0;
-      if (quantity > 0) {
-        anySelected = true;
-      }
-      calculatedPrice += ticket.price * quantity;
-    });
-    setTotalPrice(calculatedPrice);
-    setIsAnyTicketSelected(anySelected);
-  }, [selectedTickets, event.tickets]);
-
-  // Handler untuk perubahan jumlah tiket
-  const handleTicketQuantityChange = (ticketId: number, quantity: number) => {
-    const ticket = event.tickets?.find((t) => t.id === ticketId);
-    if (!ticket) return;
-
-    let finalQuantity = quantity;
-    if (finalQuantity < 0) finalQuantity = 0;
-
-    // Batasi kuantitas (hanya berdasarkan availableSeats, karena semua dianggap paid)
-    if (ticket.availableSeats !== -1) {
-      // Hapus cek type.toLowerCase() !== 'free'
-      if (finalQuantity > ticket.availableSeats) {
-        finalQuantity = ticket.availableSeats;
+  const totalPrice = useMemo(() => {
+    let total = 0;
+    if (event.tickets) {
+      for (const ticket of event.tickets) {
+        const quantity = selectedTickets[ticket.id] || 0;
+        total += ticket.price * quantity;
       }
     }
+    return total;
+  }, [selectedTickets, event.tickets]);
 
-    setSelectedTickets((prev) => ({
-      ...prev,
-      [ticketId]: finalQuantity,
-    }));
-  };
+  const isAnyTicketSelected = useMemo(() => {
+    return Object.values(selectedTickets).some((qty) => qty > 0);
+  }, [selectedTickets]);
 
-  const handleCheckout = () => {
-    console.log(
-      "Melakukan checkout dengan tiket:",
-      selectedTickets,
-      "Total Harga:",
-      totalPrice,
-    );
-    alert(
-      `Anda akan melakukan checkout untuk event ${event.title} dengan total harga: Rp ${totalPrice.toLocaleString(
-        "id-ID",
-      )}`,
-    );
-  };
+  const handleTicketQuantityChange = useCallback(
+    (ticketId: number, quantity: number) => {
+      const newQuantity = Math.max(0, quantity);
+      const ticket = event.tickets?.find((t) => t.id === ticketId);
+
+      if (ticket) {
+        if (
+          ticket.availableSeats !== -1 &&
+          newQuantity > ticket.availableSeats
+        ) {
+          setSelectedTickets((prev) => ({
+            ...prev,
+            [ticketId]: ticket.availableSeats,
+          }));
+          return;
+        }
+      }
+
+      setSelectedTickets((prev) => {
+        if (newQuantity === 0) {
+          const newState = { ...prev };
+          delete newState[ticketId];
+          return newState;
+        }
+        return {
+          ...prev,
+          [ticketId]: newQuantity,
+        };
+      });
+    },
+    [event.tickets],
+  );
+
+  const handleCheckout = useCallback(() => {
+    if (!event || event.id === undefined) {
+      console.error("Event object or event ID is missing for checkout.");
+      return;
+    }
+
+    const ticketsPayload = Object.entries(selectedTickets)
+      .filter(([, quantity]) => quantity > 0)
+      .map(([ticketId, quantity]) => ({
+        ticketId: parseInt(ticketId),
+        quantity: quantity,
+      }));
+
+    if (ticketsPayload.length === 0) {
+      console.warn("Tidak ada tiket yang dipilih untuk checkout.");
+      return;
+    }
+
+    createTransaction({
+      eventId: event.id,
+      tickets: ticketsPayload,
+    });
+  }, [event, selectedTickets, createTransaction]);
 
   return {
     selectedTickets,
     totalPrice,
     isAnyTicketSelected,
+    isCreatingTransaction,
     handleTicketQuantityChange,
     handleCheckout,
   };

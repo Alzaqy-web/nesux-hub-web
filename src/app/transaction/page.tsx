@@ -1,10 +1,10 @@
-import TransactionDetail from "@/features/transaction/components/TransactionDetail";
+import TransactionPage from "@/features/transaction/[id]";
 import React from "react";
 
 const Trasaction = () => {
   return (
     <div>
-      <TransactionDetail />
+      <TransactionPage />
     </div>
   );
 };
