@@ -2,10 +2,12 @@ import { axiosInstance } from "@/lib/axios";
 import { PageableResponse, PaginationQueries } from "@/types/pagination";
 import { Transaction } from "@/types/transaction";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
-const useGetAdminTransactions = (queries?: PaginationQueries) => {
-  const session = useSession();
+const useGetAdminTransactions = (
+  accessToken?: string,
+  queries?: PaginationQueries,
+) => {
+  // const session = useSession();
 
   return useQuery({
     queryKey: ["transactions-admin", queries],
@@ -15,7 +17,7 @@ const useGetAdminTransactions = (queries?: PaginationQueries) => {
         {
           params: queries,
           headers: {
-            Authorization: `Bearer ${session?.data?.user?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );

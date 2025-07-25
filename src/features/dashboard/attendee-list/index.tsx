@@ -1,8 +1,10 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import TableEvents from "./components/TableEvents";
+import TableAttendee from "./components/TableAttendee";
 
 const DashboardAttendeeListPage = () => {
   return (
@@ -20,11 +22,11 @@ const DashboardAttendeeListPage = () => {
         <div className="p-6">
           <Card className="@container/card">
             <CardHeader>
-              {/* <CardDescription>My Events</CardDescription> */}
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                My Events
+                Attendee List
               </CardTitle>
-              <TableEvents />
+
+              <TableAttendee />
             </CardHeader>
           </Card>
         </div>

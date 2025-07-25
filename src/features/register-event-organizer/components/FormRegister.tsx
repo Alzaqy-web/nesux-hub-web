@@ -40,7 +40,7 @@ const FormRegisterEO = () => {
   });
 
   return (
-    <div className="mt-10 flex justify-center">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Register Your Account</CardTitle>

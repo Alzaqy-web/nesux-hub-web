@@ -7,7 +7,7 @@ const FormRegister = () => {
   const router = useRouter();
 
   return (
-    <div className="mt-[200px] flex flex-col items-center justify-center px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <h1 className="mb-6 text-2xl font-semibold">Choose Registration Type</h1>
 
       <div className="flex flex-col gap-4 sm:flex-row">

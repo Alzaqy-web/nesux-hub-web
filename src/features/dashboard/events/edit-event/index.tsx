@@ -23,6 +23,7 @@ const DashboardEditEventsPage = () => {
               {/* <CardDescription>My Events</CardDescription> */}
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 My Events
+                {/* <FormEditEvent slug="" /> */}
               </CardTitle>
             </CardHeader>
           </Card>

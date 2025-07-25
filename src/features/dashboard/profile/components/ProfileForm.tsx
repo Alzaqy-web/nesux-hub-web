@@ -3,139 +3,84 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import { useRef, useState, useEffect, ChangeEvent } from "react";
+import { useFormik } from "formik";
 import { Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useUploadProfilePic } from "../api/useUploadProfilePic";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import useEditProfile from "../api/useEditProfile";
 
 const ProfileForm = () => {
-  const { data: session, status } = useSession();
-  const { mutateAsync: uploadProfilePic } = useUploadProfilePic();
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    profilePic: "",
-    referralCode: "",
-    points: 0,
-  });
-  const [selectedImage, setSelectedImage] = useState<string>("");
-  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const { data: session } = useSession();
   const imageRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [isClient, setIsClient] = useState(false);
+
+  const { mutateAsync: updateProfile } = useEditProfile(
+    Number(session?.user.id),
+    session,
+  );
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      name: session?.user?.name || "",
+      email: session?.user?.email || "",
+      password: "",
+      profilePic: null as File | null,
+    },
+    onSubmit: async (values) => {
+      await updateProfile(values);
+    },
+  });
 
   useEffect(() => {
-    if (session?.user) {
-      setForm({
-        name: session.user.name || "",
-        email: session.user.email || "",
-        password: "",
-        profilePic: session.user.profilePic || "",
-        referralCode: session.user.referralCode || "",
-        points: session.user.points || 0,
-      });
-      setSelectedImage(session.user.profilePic || "");
+    setIsClient(true);
+
+    if (session?.user?.profilePic) {
+      setPreviewImage(session.user.profilePic);
     }
   }, [session]);
 
   if (status === "loading") return <p>Loading...</p>;
 
-  const onChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setProfilePic(file);
-      setSelectedImage(URL.createObjectURL(file));
+      formik.setFieldValue("profilePic", file);
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
   const removeImage = () => {
-    setProfilePic(null);
-    setSelectedImage("");
+    formik.setFieldValue("profilePic", null);
+    setPreviewImage("");
     if (imageRef.current) imageRef.current.value = "";
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    // e.preventDefault();
-
-    // try {
-    // let imageUrl = "";
-
-    // if (profilePic) {
-    //   const res = await uploadProfilePic(profilePic);
-    //   console.log("📦 Upload response:", res);
-
-    //   if (!res || !res.imageUrl) {
-    //     throw new Error(
-    //       "Upload berhasil tapi tidak menerima imageUrl dari server",
-    //     );
-    //   }
-
-    //   imageUrl = res.imageUrl;
-    //   setSelectedImage(imageUrl);
-    // }
-
-    // await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/profile`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${session?.user?.accessToken}`,
-    //   },
-    //   body: JSON.stringify({
-    //     name: form.name,
-    //     email: form.email,
-    //     password: form.password || undefined,
-    //   }),
-    // });
-    // await update({
-    //   ...session,
-    //   user: {
-    //     ...session?.user,
-    //     name: form.name,
-    //     email: form.email,
-    //     profilePic: imageUrl || session?.user.profilePic,
-    //   },
-    // });
-
-    // if (!updateRes.ok) {
-    //   const errBody = await updateRes.json();
-    //   throw new Error(errBody.message || "Update profile failed");
-    // }
-
-    alert("Profile saved!");
-    // } catch (err) {
-    //   console.error("❌ Upload error:", err);
-    //   alert("Upload gagal: " + (err as Error).message);
-    // }
-  };
-
-  const getValidImageSrc = (src: string | null | undefined) => {
-    return src && src !== "null" && src !== "" ? src : null;
-  };
+  const getValidImageSrc = (src: string | null | undefined) =>
+    src && src !== "null" && src !== "" ? src : null;
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit}
       className="mx-auto flex max-w-md flex-col gap-6 rounded-2xl border p-4 shadow"
     >
       <div className="flex flex-col items-center gap-2">
         <div className="relative h-28 w-28">
           <div className="relative h-full w-full overflow-hidden rounded-full border">
-            <Image
-              src={
-                getValidImageSrc(selectedImage) ||
-                getValidImageSrc(form.profilePic) ||
-                getValidImageSrc(session?.user?.profilePic) ||
-                "https://avatar.iran.liara.run/public/10"
-              }
-              alt="Profile Pic"
-              fill
-              className="object-cover"
-            />
+            {isClient && (
+              <Image
+                src={
+                  getValidImageSrc(previewImage) ||
+                  getValidImageSrc(session?.user?.profilePic) ||
+                  "/default-avatar.jpg"
+                }
+                alt="Profile Pic"
+                fill
+                className="object-cover"
+              />
+            )}
           </div>
 
           <Button
@@ -153,7 +98,7 @@ const ProfileForm = () => {
           type="file"
           ref={imageRef}
           accept="image/*"
-          onChange={onChangeImage}
+          onChange={handleImageChange}
         />
       </div>
 
@@ -162,8 +107,10 @@ const ProfileForm = () => {
         <Input
           id="name"
           name="name"
-          value={form.name}
-          onChange={handleChange}
+          type="text"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
       </div>
 
@@ -173,8 +120,9 @@ const ProfileForm = () => {
           id="email"
           name="email"
           type="email"
-          value={form.email}
-          onChange={handleChange}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
       </div>
 
@@ -185,13 +133,16 @@ const ProfileForm = () => {
           name="password"
           type="password"
           placeholder="Jangan diisi jika tidak ingin mengganti password"
-          value={form.password}
-          onChange={handleChange}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit">Save</Button>
+        <Button type="submit">
+          {formik.isSubmitting ? "Saving..." : "Save"}
+        </Button>
       </div>
     </form>
   );

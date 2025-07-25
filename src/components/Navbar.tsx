@@ -38,7 +38,7 @@ const Navbar = () => {
               <Link href="/profile">Profile</Link>
 
               {session.data.user.role === "customer" && (
-                <Link href="/point">Point</Link>
+                <Link href="/reward">Reward</Link>
               )}
 
               {session.data.user.role === "EO" && (
@@ -59,3 +59,8 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// container mx-auto px-4 default
+// condition ? true : false
+
+// if (condition)

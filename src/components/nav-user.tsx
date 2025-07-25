@@ -35,7 +35,7 @@ export function NavUser() {
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
+      <SidebarMenuItem className="mt-auto">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton

@@ -2,10 +2,13 @@ import { axiosInstance } from "@/lib/axios";
 import { Event } from "@/types/event";
 import { PageableResponse, PaginationQueries } from "@/types/pagination";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
-const useGetAdminEvents = (queries?: PaginationQueries) => {
-  const session = useSession();
+const useGetAdminEvents = (
+  accessToken?: string,
+  queries?: PaginationQueries,
+) => {
+  // const session = useSession();
 
   return useQuery({
     queryKey: ["events-admin", queries],
@@ -15,7 +18,7 @@ const useGetAdminEvents = (queries?: PaginationQueries) => {
         {
           params: queries,
           headers: {
-            Authorization: `Bearer ${session?.data?.user?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );

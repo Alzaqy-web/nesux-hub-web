@@ -20,7 +20,6 @@ const DashboardEventsPage = () => {
         <div className="p-6">
           <Card className="@container/card">
             <CardHeader>
-              {/* <CardDescription>My Events</CardDescription> */}
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 My Events
               </CardTitle>
