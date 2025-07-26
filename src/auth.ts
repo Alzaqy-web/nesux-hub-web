@@ -22,10 +22,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn() {
       return true;
     },
-    async jwt({ token, user,trigger }) {
-      if (user || trigger === "update") token.user = user;
+    async jwt({ token, user, trigger, session })
+    { if (trigger === "update" && session)
+      { token.user = { ...(token.user || {}), ...session.user };
       return token;
-    },
+    } if (user) { token.user = user; } return token; },
+    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token }: any) {
       if (token.user) session.user = token.user;

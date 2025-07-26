@@ -1,14 +1,14 @@
 import React from "react";
 
 const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+  // const currentYear = new Date().getFullYear();
 
   return (
     <footer className="mt-5 bg-gray-800 py-4 text-gray-300">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start">
           <div className="text-center md:text-left">
-            <h3 className="mb-2 text-lg font-bold text-white">NaxusHub</h3>
+            <h3 className="mb-2 text-lg font-bold text-white">NexusHub</h3>
           </div>
           <div className="text-center md:text-left">
             <h4 className="mb-2 font-semibold text-white">Quick Links</h4>

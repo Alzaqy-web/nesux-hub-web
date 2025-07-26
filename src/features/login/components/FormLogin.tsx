@@ -29,7 +29,7 @@ const FormLogin = () => {
   });
 
   return (
-    <div className="mt-20 flex justify-center">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to Your Account</CardTitle>

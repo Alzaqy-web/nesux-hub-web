@@ -45,8 +45,8 @@ const PaginationSection = ({
           <PaginationLink>{page}</PaginationLink>
         </PaginationItem>
 
-        <PaginationItem>
-          <PaginationNext onClick={handleNext} />
+        <PaginationItem onClick={handleNext}>
+          <PaginationNext />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

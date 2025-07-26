@@ -26,9 +26,9 @@ const EventCard = ({ event }: EventCardProps) => {
     ? Math.min(...event.tickets.map((t) => t.price))
     : null;
 
-  const totalSeats = Array.isArray(event.tickets)
-    ? event.tickets.reduce((acc, t) => acc + (t.availableSeats || 0), 0)
-    : 0;
+  // const totalSeats = Array.isArray(event.tickets)
+  //   ? event.tickets.reduce((acc, t) => acc + (t.availableSeats || 0), 0)
+  //   : 0;
 
   return (
     <Link href={`/events/${event.slug}`}>

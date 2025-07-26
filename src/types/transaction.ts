@@ -64,6 +64,11 @@ export interface Transaction {
     endDate: string; // Date string
     location: string;
   };
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
   payments: Payment | null; // Bisa null jika belum ada pembayaran atau pembayaran gagal
 }
 

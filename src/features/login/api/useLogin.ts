@@ -20,7 +20,7 @@ const useLogin = () => {
     onSuccess: async (data) => {
       await signIn("credentials", { ...data, redirect: false });
       toast.success("login success");
-      router.push("/");
+      router.push(data.role === "EO" ? "/dashboard" : "/");
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data.message);

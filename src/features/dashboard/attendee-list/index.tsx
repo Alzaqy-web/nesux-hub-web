@@ -1,0 +1,38 @@
+"use client";
+
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import TableAttendee from "./components/TableAttendee";
+
+const DashboardAttendeeListPage = () => {
+  return (
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader title="Attendee List" />
+        <div className="p-6">
+          <Card className="@container/card">
+            <CardHeader>
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                Attendee List
+              </CardTitle>
+
+              <TableAttendee />
+            </CardHeader>
+          </Card>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+};
+
+export default DashboardAttendeeListPage;

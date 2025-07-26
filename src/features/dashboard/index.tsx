@@ -1,26 +1,43 @@
-// src/features/dashboard/index.tsx
-import StatsCard from "./components/StatsCard"
-import TransactionTable from "./components/TranscationTable"
-import AttendeeList from "./components/AttendeeList"
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import ChartDashboardRevenue from "./components/chart-bar-revenue";
+import ChartDashboardTickets from "./components/chart-bar-ticket";
+import { SectionCards } from "./components/sectionCards";
 
-export default function DashboardFeature() {
+const DashboardPage = () => {
   return (
-    <div className="grid gap-6">
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatsCard title="Total Events" value="12" />
-        <StatsCard title="Total Revenue" value="Rp 12.000.000" />
-        <StatsCard title="Pending Transactions" value="5" />
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Recent Transactions</h2>
-        <TransactionTable />
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Attendee List</h2>
-        <AttendeeList />
-      </section>
+    <div className="flex flex-col">
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader title="Dashboard" />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="grid grid-cols-4 gap-4 px-6 py-4 md:gap-5 md:py-6">
+                <div className="col-span-4 md:col-span-4">
+                  <SectionCards />
+                </div>
+                <div className="col-span-4 md:col-span-2">
+                  <ChartDashboardRevenue />
+                </div>
+                <div className="col-span-4 md:col-span-2">
+                  <ChartDashboardTickets />
+                </div>
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
-  )
-}
+  );
+};
+
+export default DashboardPage;
